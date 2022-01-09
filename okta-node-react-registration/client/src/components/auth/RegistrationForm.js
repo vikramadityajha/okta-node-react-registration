@@ -1,6 +1,7 @@
 import React from 'react'; 
 import OktaAuth from '@okta/okta-auth-js';
 import { withAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
 
 import config from '../../app.config';
 
@@ -12,6 +13,7 @@ export default withAuth(class RegistrationForm extends React.Component{
       lastName: '',
       email: '',
       password: '',
+      EmailConsent: true,
       sessionToken: null
     };
     this.oktaAuth = new OktaAuth({ url: config.url });
@@ -22,7 +24,8 @@ export default withAuth(class RegistrationForm extends React.Component{
     this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
     this.handleLastNameChange = this.handleLastNameChange.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);    
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);   
+    this.handleEmailConsentChange = this.handleEmailConsentChange.bind(this); 
   }
 
   async checkAuthentication() {
@@ -51,9 +54,15 @@ export default withAuth(class RegistrationForm extends React.Component{
   handlePasswordChange(e) {
     this.setState({ password: e.target.value });
   }
+  handleEmailConsentChange(e) {
+    console.log("inside handleEmailConsentChange: e.target: ",e.target);
+    console.log("inside handleEmailConsentChange: this.state.EmailConsent: ",this.state.EmailConsent);
+    this.setState({ EmailConsent: e.target.checked });
+  }
 
   handleSubmit(e) {
     e.preventDefault();
+    console.log("handleSubmit: ",JSON.stringify(this.state));
     fetch('/api/users', { 
       method: 'POST', 
       headers: {
@@ -62,6 +71,7 @@ export default withAuth(class RegistrationForm extends React.Component{
       },
       body: JSON.stringify(this.state)
     }).then(user => {
+      console.log("user 1: ",user);
       this.oktaAuth.signIn({
         username: this.state.email,
         password: this.state.password
@@ -75,35 +85,10 @@ export default withAuth(class RegistrationForm extends React.Component{
 
   render(){
     if (this.state.sessionToken) {
-     // this.props.auth.redirect({ sessionToken: this.state.sessionToken });
-      return null;
+      return <Redirect to={{ pathname: '/profile' }} />;
     }
 
     return(
-      // <form onSubmit={this.handleSubmit}>
-      //   <div className="form-element">
-      //     <label>Email:</label>
-      //     <input type="email" id="email" value={this.state.email} 
-      //     onChange={this.handleEmailChange}/>
-      //   </div>
-      //   <div className="form-element">
-      //     <label>First Name:</label>
-      //     <input type="text" id="firstName" value={this.state.firstName} 
-      //     onChange={this.handleFirstNameChange} />
-      //   </div>
-      //   <div className="form-element">
-      //     <label>Last Name:</label>
-      //     <input type="text" id="lastName" value={this.state.lastName} 
-      //     onChange={this.handleLastNameChange} />
-      //   </div>
-      //   <div className="form-element">
-      //     <label>Password:</label>
-      //     <input type="password" id="password" value={this.state.password} 
-      //     onChange={this.handlePasswordChange} />
-      //   </div>
-      //   <input type="submit" id="submit" value="Register"/>
-      // </form>
-
 
       <form onSubmit={this.handleSubmit}>
                 <h3>Sign Up</h3>
@@ -147,10 +132,20 @@ export default withAuth(class RegistrationForm extends React.Component{
                         onChange={this.handlePasswordChange} 
                         placeholder="Enter password" />
                 </div>
+                <div className="form-group">
+                    <div className="custom-control custom-checkbox">
+                        <input type="checkbox" 
+                          className="custom-control-input" 
+                          id="emailConsentCheck" 
+                          checked={this.state.EmailConsent}
+                          onChange = {this.handleEmailConsentChange}/>
+                        <label className="custom-control-label custom-control-label-checkbox" htmlFor="emailConsentCheck">I would like to receive email updates about DemoCorp products and services</label>
+                    </div>
+                </div>
 
                 <button type="submit" className="btn btn-primary btn-block">Register</button>
                 <p className="forgot-password text-right">
-                    Already registered <a href="/login">Login?</a>
+                    Already have an account? <a href="/login">Login here</a>
                 </p>
             </form>
     );

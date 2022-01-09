@@ -30,7 +30,6 @@ export default withAuth(class LoginForm extends React.Component {
         sessionToken: res.sessionToken
       }))
       .catch(err => {
-        //this.setState({error: err.message});
         console.log(err.statusCode + ' error', err)
       });
   }
