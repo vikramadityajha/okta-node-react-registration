@@ -25,7 +25,7 @@ export default withAuth(class Navigation extends React.Component {
 
     const authNav = this.state.authenticated ?
         <div className="container">
-        <Link className="navbar-brand" to={"/profile"}>React-Okta</Link>
+        <Link className="navbar-brand" to={"/profile"}>Okta-COI</Link>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
@@ -38,7 +38,7 @@ export default withAuth(class Navigation extends React.Component {
         </div>
       </div> : 
         <div className="container">
-        <a className="navbar-brand" href="javascript:void(0)" onClick={() => this.props.auth.login()}>React-Okta</a>
+        <a className="navbar-brand" href="javascript:void(0)" onClick={() => this.props.auth.login()}>Okta-COI</a>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
