@@ -1,5 +1,8 @@
 import React from 'react';
 import { withAuth } from '@okta/okta-react';
+import { toast } from 'react-toastify';
+import ToastNotification from '../common/ToastNotification';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default withAuth(class ProfilePage extends React.Component {
   constructor(props) {
@@ -61,6 +64,7 @@ export default withAuth(class ProfilePage extends React.Component {
     user.profile.DataSharingConsent = e.target.checked;
     this.setState({user});
   }
+  
 
   handleSubmit(e) {
     e.preventDefault();
@@ -74,7 +78,18 @@ export default withAuth(class ProfilePage extends React.Component {
       body: JSON.stringify(this.state)
     }).then(user => {
       console.log("user 1: ",user);
-      
+     // toast.success("Update Successfully", options); 
+     toast.success('Update Successfully', {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+      //toast('Update Successfully');
+     
     })
     .catch(err => console.log);
   }
@@ -133,6 +148,7 @@ export default withAuth(class ProfilePage extends React.Component {
                     </div>
                 </div>
                 <button type="submit" className="btn btn-primary btn-block">Update</button>
+                <ToastNotification/>
         </form>
 
       

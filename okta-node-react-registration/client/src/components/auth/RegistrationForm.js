@@ -3,6 +3,7 @@ import OktaAuth from '@okta/okta-auth-js';
 import { withAuth } from '@okta/okta-react';
 import { Redirect } from 'react-router-dom';
 
+
 import config from '../../app.config';
 
 export default withAuth(class RegistrationForm extends React.Component{
@@ -147,6 +148,7 @@ export default withAuth(class RegistrationForm extends React.Component{
                 <p className="forgot-password text-right">
                     Already have an account? <a href="/login">Login here</a>
                 </p>
+                
             </form>
     );
   }
