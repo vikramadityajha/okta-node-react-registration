@@ -18,7 +18,6 @@ export default class ToastNotification extends React.Component {
           draggable
           pauseOnHover
           theme= "colored"
-          type= "success"
         />
       );
     }

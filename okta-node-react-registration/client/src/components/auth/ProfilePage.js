@@ -7,13 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 export default withAuth(class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { user: null };
+    this.state = { user: null , buttonDisabled: false,};
     this.getCurrentUser = this.getCurrentUser.bind(this);
     this.handleEmailConsentChange = this.handleEmailConsentChange.bind(this);
     this.handlePostalMailConsentCheck = this.handlePostalMailConsentCheck.bind(this);
     this.handlePostalMailConsentaddress = this.handlePostalMailConsentaddress.bind(this);
     this.handleDataSharingConsentCheck = this.handleDataSharingConsentCheck.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDeactivate = this.handleDeactivate.bind(this);
   }
 
   async getCurrentUser() {
@@ -67,6 +68,7 @@ export default withAuth(class ProfilePage extends React.Component {
   
 
   handleSubmit(e) {
+    this.setState({buttonDisabled: true});
     e.preventDefault();
     console.log("handleSubmit: ",JSON.stringify(this.state));
     fetch('/api/users/update', { 
@@ -77,8 +79,6 @@ export default withAuth(class ProfilePage extends React.Component {
       },
       body: JSON.stringify(this.state)
     }).then(user => {
-      console.log("user 1: ",user);
-     // toast.success("Update Successfully", options); 
      toast.success('Update Successfully', {
       position: "top-right",
       autoClose: 3000,
@@ -88,10 +88,27 @@ export default withAuth(class ProfilePage extends React.Component {
       draggable: true,
       progress: undefined,
       });
-      //toast('Update Successfully');
-     
+      this.setState({buttonDisabled: false});
     })
-    .catch(err => console.log);
+    .catch(err => this.setState({buttonDisabled: false}));
+    
+  }
+
+  handleDeactivate(e) {
+    this.setState({buttonDisabled: true});
+    e.preventDefault();
+    this.props.auth.logout();
+    fetch('/api/users/deactivate', { 
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state)
+    }).then(user => {
+        this.setState({buttonDisabled: false});
+    })
+    .catch(err => this.setState({buttonDisabled: false}));
   }
 
   componentDidMount() {
@@ -147,8 +164,12 @@ export default withAuth(class ProfilePage extends React.Component {
                         <label className="custom-control-label custom-control-label-checkbox" htmlFor="dataSharingConsentCheck">DemoCorp can share my usage information with partners to tailor my user experience</label>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary btn-block">Update</button>
+                <div className="btn-in-row">
+                  <button onClick = {this.handleSubmit} disabled={this.state.buttonDisabled} className="btn btn-update">Update</button>
+                  <button onClick = {this.handleDeactivate} disabled={this.state.buttonDisabled} className="btn btn-deactivate">Deactivate my account</button>
+                </div>
                 <ToastNotification/>
+                
         </form>
 
       

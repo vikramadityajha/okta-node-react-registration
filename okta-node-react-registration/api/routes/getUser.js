@@ -4,7 +4,7 @@ const oktaClient = require('../lib/oktaClient');
 
 /* Get a details of User */
 router.get('/', (req, res) => {
-  console.log("req ",req);
+  console.log("req:::::::::::::::::::::; ");
   if (!req) return res.sendStatus(400);
   oktaClient.getUser( req.headers.username)
 .then(user => {

@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var getUsersRouter = require('./routes/getUser');
 var updateUsersRouter = require('./routes/updateUser');
+var deactivateUsersRouter = require('./routes/deactivateUser');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/users/get', getUsersRouter);
 app.use('/api/users/update', updateUsersRouter);
+app.use('/api/users/deactivate', deactivateUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
